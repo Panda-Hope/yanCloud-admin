@@ -1,0 +1,88 @@
+@import '~normalize.css';
+
+* {
+  box-sizing: border-box;
+  
+  *:before, *:after {
+    box-sizing: border-box;
+  }
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+@for $i from 1 through 9 {
+  h#{$i} {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@mixin box-gap($name, $direction, $gap) {
+  .#{$name}-#{$gap} {
+    #{$direction}: #{$gap}px;
+  }
+}
+
+$gaps:  5, 8, 10, 15, 20, 30;
+
+@each $gap in $gaps {
+  @include box-gap('mr', 'margin-right', $gap);
+  @include box-gap('ml', 'margin-left', $gap);
+  @include box-gap('mb', 'margin-bottom', $gap);
+  @include box-gap('mt', 'margin-top', $gap);
+  @include box-gap('ma', 'margin', $gap);
+
+  @include box-gap('pr', 'padding-right', $gap);
+  @include box-gap('pl', 'padding-left', $gap);
+  @include box-gap('pb', 'padding-bottom', $gap);
+  @include box-gap('pt', 'padding-top', $gap);
+  @include box-gap('pa', 'padding', $gap);
+}
+
+@mixin caret($direction, $size, $color) {
+  width: 0;
+  height: 0;
+  border-top: $size solid if($direction == 'top', $color, transparent);
+  border-left: $size solid if($direction == 'left', $color, transparent);
+  border-right: $size solid if($direction == 'right', $color, transparent);
+  border-bottom: $size solid if($direction == 'bottom', $color, transparent);
+}
+
+@mixin ellipsis($n) {
+  .text-ellipsis_#{$n} {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  
+    display: -webkit-box;
+    -webkit-line-clamp: $n;
+    /*! autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+    white-space: normal;
+  }
+}
+
+$gaps: 1,2,3;
+
+@each $gap in $gaps {
+  @include ellipsis($gap);
+}
+
+.ellipsis_2 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /*! autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+

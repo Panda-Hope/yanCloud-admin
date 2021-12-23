@@ -1,0 +1,13 @@
+$menu: (
+    "active-color": var(--el-color-white),
+    "text-color": var(--el-color-white),
+    "hover-text-color": var(--el-color-white),
+    "bg-color": var(--el-color-primary),
+    "hover-bg-color": var(--el-color-primary-light-2)
+);
+
+.el-menu-item {
+  &.is-active {
+    background-color: var(--el-color-primary-light-3);
+  }
+}

@@ -1,0 +1,86 @@
+.page-container {
+  display: flex;
+  min-height: 100vh;
+  
+  .page-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    min-width: 200px;
+    min-height: 100vh;
+    
+    &.el-menu--collapse {
+      min-width: 64px;
+    }
+  }
+  
+  .page-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+    //transition: all cubic-bezier(0.23, 1, 0.32, 1) .3s;
+    
+    .page-nav {
+      display: flex;
+      height: 80px;
+      align-items: center;
+      justify-content: space-between;
+      
+      > .left {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        
+        > .page-icon {
+          display: flex;
+          width: 40px;
+          height: 100%;
+          font-size: 22px;
+          cursor: pointer;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+      
+      > .right {
+        margin-right: 10px;
+        display: flex;
+        height: 100%;
+        align-items: center;
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .el-dropdown {
+          .el-dropdown--small {
+            .el-avatar {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+    
+    .page-content {
+      position: relative;
+      flex: 1;
+      padding: 20px;
+      
+      .table-content {
+        margin-top: 20px;
+      }
+
+      .pagination {
+        margin-top: 20px;
+        text-align: center;
+      }
+    }
+  }
+}
