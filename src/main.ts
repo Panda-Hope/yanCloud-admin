@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-import '@/styles/index.scss'
+import '@/styles/index.scss' // 全局公用样式
 
 import setRouter from './router' // 注册路由
 import setStore from './store' // 注册Vuex

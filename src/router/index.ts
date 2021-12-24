@@ -1,39 +1,44 @@
-import { App } from 'vue';
+import { App } from 'vue'
 import {
   Router,
   createRouter,
   RouteRecordRaw,
   createWebHistory,
   RouteRecordName,
-} from 'vue-router';
-import { pathToRegexp } from 'path-to-regexp';
-import Layout from '@/components/Layout/index.vue';
-import { hasPermission } from '@/utils';
-import { store } from '@/store';
-import { initGlobalUserInfo, injectRouteBadge, getMenuPermission } from '@/global'
+} from 'vue-router'
+import { pathToRegexp } from 'path-to-regexp'
+import Layout from '@/components/Layout/index.vue'
+import { hasPermission } from '@/utils'
+import { store } from '@/store'
+import {
+  initGlobalUserInfo,
+  injectRouteBadge,
+  getMenuPermission
+} from '@/global'
 
-import HomeRoutes from './home';
+import HomeRoutes from './home'
 
 // 导出路由实例
 export const router: Router = createRouter({
-  history: createWebHistory(import.meta.env.PROD ? '/admin/parasol/page' : ''),
+  history: createWebHistory(import.meta.env.PROD ? '/prod/' : ''),
   scrollBehavior: () => ({ left: 0, top: 0 }),
   routes: [],
-});
+})
 
 // 注册应用路由
 const setRouter = (app: App) => {
-  // 初始化主页路由
+  // APP根路由
   const AppRoute: RouteRecordRaw[] = [
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/home', // 默认跳转至首页
       name: 'App',
       component: Layout,
       children: [],
     },
-  ];
-  // 加载外部静态路由
+  ]
+
+  // 加载外部静态路由(无需鉴权)
   const StaticRoute: RouteRecordRaw[] = [
     {
       path: '/401',
@@ -50,34 +55,36 @@ const setRouter = (app: App) => {
       name: 'login',
       component: () => import('@/pages/Login/index.vue'),
     }
-  ];
+  ]
+
   // 内部白名单路由(无需授权)
-  const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes];
+  const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes]
 
-  const InitializedRoutes: RouteRecordRaw[] = [...AppRoute, ...StaticRoute];
-  InitializedRoutes.forEach((route) => router.addRoute(route));
-  WhiteRoute.forEach((route) => router.addRoute('App', route));
+  // 初始路由
+  const InitializedRoutes: RouteRecordRaw[] = [...AppRoute, ...StaticRoute]
+  InitializedRoutes.forEach((route) => router.addRoute(route))
+  WhiteRoute.forEach((route) => router.addRoute('App', route))
 
-  store.commit('addMenu', WhiteRoute); // Asynchronous Route To Menu
+  store.commit('addMenu', WhiteRoute) // Asynchronous Route To Menu
 
   // 注册动态路由(需经过授权)
   router.beforeEach(async (to) => {
-    const { name } = to;
-    const menus = store.getters.getMenu;
+    const { name } = to
+    const menus = store.getters.getMenu
 
+    // 校验是否白名单路由
     if (router.hasRoute(name as RouteRecordName)) {
-      // 校验是否存在于白名单
-      const hasWhiteRoute = WhiteRoute.find((r) => r.name === name);
+      const hasWhiteRoute = WhiteRoute.find((r) => r.name === name)
       if (hasWhiteRoute && menus.length <= WhiteRoute.length) {
-        await addAuthorizedRoute();
+        await addAuthorizedRoute()
       }
-      return true;
+      return true
     }
 
     // 开始注册动态路由
     return await new Promise(async (resolve) => {
       if (menus.length <= WhiteRoute.length) {
-         await addAuthorizedRoute();
+         await addAuthorizedRoute()
       }
 
       // Check Whether Route Is Valid
@@ -92,29 +99,29 @@ const setRouter = (app: App) => {
 export const addAuthorizedRoute = async () => {
   const hasLogin = store.state.user.hasLogin
   if (!hasLogin) {
-    // getMenuPermission()
+    getMenuPermission()
     // await Promise.all([initGlobalUserInfo(), getMenuPermission()])
   }
 
-  const AsyncRoute: RouteRecordRaw[] = [];
+  const AsyncRoute: RouteRecordRaw[] = []
   // 递归校验路由鉴权
   const nestedRouteAuth = (routes: RouteRecordRaw[]) =>
     routes.filter((r) => {
-      const permission = (r.meta ? r.meta.permission : '') as string | string[];
+      const permission = (r.meta ? r.meta.permission : '') as string | string[]
       if (hasPermission(permission)) {
         if (r.children) {
-          r.children = nestedRouteAuth(r.children);
+          r.children = nestedRouteAuth(r.children)
         }
-        return true;
+        return true
       }
-    });
+    })
 
-  const AuthorizedRoute = nestedRouteAuth(AsyncRoute);
-  store.commit('addMenu', AuthorizedRoute); // Asynchronous Route To Menu
-  AuthorizedRoute.forEach((route) => router.addRoute('App', route));
+  const AuthorizedRoute = nestedRouteAuth(AsyncRoute)
+  store.commit('addMenu', AuthorizedRoute) // Asynchronous Route To Menu
+  AuthorizedRoute.forEach((route) => router.addRoute('App', route))
 
   // 注入菜单未读标记
   injectRouteBadge()
-};
+}
 
-export default setRouter;
+export default setRouter
