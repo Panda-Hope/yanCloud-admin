@@ -1,5 +1,6 @@
 @import '~normalize.css';
 
+// 全局通用CSS
 * {
   box-sizing: border-box;
   
@@ -24,14 +25,14 @@ p {
   }
 }
 
+
+// Margin、Padding间距
 @mixin box-gap($name, $direction, $gap) {
   .#{$name}-#{$gap} {
     #{$direction}: #{$gap}px;
   }
 }
-
 $gaps:  5, 8, 10, 15, 20, 30;
-
 @each $gap in $gaps {
   @include box-gap('mr', 'margin-right', $gap);
   @include box-gap('ml', 'margin-left', $gap);
@@ -55,6 +56,7 @@ $gaps:  5, 8, 10, 15, 20, 30;
   border-bottom: $size solid if($direction == 'bottom', $color, transparent);
 }
 
+// CSS文本多行缩略
 @mixin ellipsis($n) {
   .text-ellipsis_#{$n} {
     overflow: hidden;
@@ -69,20 +71,25 @@ $gaps:  5, 8, 10, 15, 20, 30;
   }
 }
 
-$gaps: 1,2,3;
-
+$gaps: 1,2,3,4,5;
 @each $gap in $gaps {
   @include ellipsis($gap);
 }
 
-.ellipsis_2 {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  /*! autoprefixer: ignore next */
-  -webkit-box-orient: vertical;
-  white-space: normal;
+// Flexbox 相关属性
+.flex {
+  display: flex;
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.alignCenter {
+    align-items: center;
+  }
+
+  &.spaceBetween {
+    justify-content: space-between;
+  }
 }
 

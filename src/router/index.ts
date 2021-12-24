@@ -14,16 +14,16 @@ import { initGlobalUserInfo, injectRouteBadge, getMenuPermission } from '@/globa
 
 import HomeRoutes from './home';
 
-// export router instance
+// 导出路由实例
 export const router: Router = createRouter({
   history: createWebHistory(import.meta.env.PROD ? '/admin/parasol/page' : ''),
   scrollBehavior: () => ({ left: 0, top: 0 }),
   routes: [],
 });
 
-// Register Application Routes
+// 注册应用路由
 const setRouter = (app: App) => {
-  // Initialized Home Route
+  // 初始化主页路由
   const AppRoute: RouteRecordRaw[] = [
     {
       path: '/',
@@ -33,7 +33,7 @@ const setRouter = (app: App) => {
       children: [],
     },
   ];
-  // External Static Route
+  // 加载外部静态路由
   const StaticRoute: RouteRecordRaw[] = [
     {
       path: '/401',
@@ -51,7 +51,7 @@ const setRouter = (app: App) => {
       component: () => import('@/pages/Login/index.vue'),
     }
   ];
-  // Async Route But Not Need Authorization
+  // 内部白名单路由(无需授权)
   const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes];
 
   const InitializedRoutes: RouteRecordRaw[] = [...AppRoute, ...StaticRoute];
@@ -60,13 +60,13 @@ const setRouter = (app: App) => {
 
   store.commit('addMenu', WhiteRoute); // Asynchronous Route To Menu
 
-  /* Register Route Navigation Guard */
+  // 注册动态路由(需经过授权)
   router.beforeEach(async (to) => {
     const { name } = to;
     const menus = store.getters.getMenu;
 
     if (router.hasRoute(name as RouteRecordName)) {
-      // In WhiteRoute Sync Load Dynamic Routes
+      // 校验是否存在于白名单
       const hasWhiteRoute = WhiteRoute.find((r) => r.name === name);
       if (hasWhiteRoute && menus.length <= WhiteRoute.length) {
         await addAuthorizedRoute();
@@ -74,7 +74,7 @@ const setRouter = (app: App) => {
       return true;
     }
 
-    /* Dynamic Register Route */
+    // 开始注册动态路由
     return await new Promise(async (resolve) => {
       if (menus.length <= WhiteRoute.length) {
          await addAuthorizedRoute();
@@ -88,18 +88,16 @@ const setRouter = (app: App) => {
   app.use(router)
 }
 
-/* Dynamic Register Authorized Route */
+// 获取鉴权通过路由地址
 export const addAuthorizedRoute = async () => {
-  // Get Global UserInfo First
   const hasLogin = store.state.user.hasLogin
   if (!hasLogin) {
     // getMenuPermission()
     // await Promise.all([initGlobalUserInfo(), getMenuPermission()])
   }
 
-  // Async Route Need Authorization
   const AsyncRoute: RouteRecordRaw[] = [];
-  // Recursively Check Route Authorization
+  // 递归校验路由鉴权
   const nestedRouteAuth = (routes: RouteRecordRaw[]) =>
     routes.filter((r) => {
       const permission = (r.meta ? r.meta.permission : '') as string | string[];
