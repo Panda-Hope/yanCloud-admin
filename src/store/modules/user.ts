@@ -1,6 +1,5 @@
 import { Module } from 'vuex'
 import {
-  getAccountMenu,
   getGlobalUserInfo
 } from '@/api'
 
@@ -38,21 +37,15 @@ const user: Module<User, any> = {
     },
     setUserInfo(state, info) {
       state.hasLogin = true
-      state.userInfo.name = info?.accountInfo.name
+      state.userInfo.name = info.name
       state.userInfo.id = info.id
-      state.userInfo.avatar = info?.accountInfo.avatar
-      state.userInfo.unreadNotice = info.unreadCount
+      state.userInfo.phone = info?.phone
+      state.userInfo.avatar = info?.avatar
+      state.userInfo.unreadNotice = info.unreadNotice
+      state.userInfo.permissions = info.permissions
     }
   },
   actions: {
-    async getMenuPermission({ commit }) {
-      const res = await getAccountMenu()
-      if (res.success) {
-        const permissions = res.data.map(i => i.expression)
-        commit('setPermission', permissions)
-      }
-
-    },
     async getUserInfo({ commit }) {
       const res = await getGlobalUserInfo()
       if (res.success) {

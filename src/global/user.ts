@@ -6,11 +6,6 @@ export const initGlobalUserInfo = async () => {
   await store.dispatch('getUserInfo')
 }
 
-// 获取权限菜单
-export const getMenuPermission = async () => {
-  await store.dispatch('getMenuPermission')
-}
-
 // 注入菜单未读标记, 配置在线医生路由未读消息Badge
 export const injectRouteBadge = () => {
   const routes = router.getRoutes()

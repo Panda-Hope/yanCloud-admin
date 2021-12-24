@@ -12,8 +12,7 @@ import { hasPermission } from '@/utils'
 import { store } from '@/store'
 import {
   initGlobalUserInfo,
-  injectRouteBadge,
-  getMenuPermission
+  injectRouteBadge
 } from '@/global'
 
 import HomeRoutes from './home'
@@ -87,9 +86,9 @@ const setRouter = (app: App) => {
          await addAuthorizedRoute()
       }
 
-      // Check Whether Route Is Valid
+      // 检测是否有效路由
       const isValid = router.getRoutes().find(r => !!pathToRegexp(r.path).exec(to.path))
-      resolve(isValid ? to.fullPath : '/login')
+      resolve(isValid ? to.fullPath : '/login') // 无效路由自动跳转登陆页
     })
   })
   app.use(router)
@@ -99,12 +98,11 @@ const setRouter = (app: App) => {
 export const addAuthorizedRoute = async () => {
   const hasLogin = store.state.user.hasLogin
   if (!hasLogin) {
-    getMenuPermission()
-    // await Promise.all([initGlobalUserInfo(), getMenuPermission()])
+    await Promise.all([initGlobalUserInfo()])
   }
 
   const AsyncRoute: RouteRecordRaw[] = []
-  // 递归校验路由鉴权
+  // 递归校验路由鉴权，过滤无鉴权路由
   const nestedRouteAuth = (routes: RouteRecordRaw[]) =>
     routes.filter((r) => {
       const permission = (r.meta ? r.meta.permission : '') as string | string[]
