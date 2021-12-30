@@ -21,6 +21,6 @@ const Bootstrap = () => {
   app.mount('#app')
 }
 
-// Initialize The App
+// 初始化应用
 Bootstrap()
 

@@ -24,42 +24,45 @@ export const router: Router = createRouter({
   routes: [],
 })
 
+// APP根路由
+const AppRoute: RouteRecordRaw[] = [
+  {
+    path: '/',
+    redirect: '/home', // 默认跳转至首页
+    name: 'App',
+    component: Layout,
+    children: [],
+  },
+]
+
+// 加载外部静态路由(无需鉴权)
+const StaticRoute: RouteRecordRaw[] = [
+  {
+    path: '/401',
+    name: '401',
+    component: () => import('@/pages/401/index.vue'),
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/pages/404/index.vue'),
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/pages/Login/index.vue'),
+  }
+]
+
+// 内部白名单路由(无需授权)
+const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes]
+
+// 异步动态加载路由
+const AsyncRoute: RouteRecordRaw[] = []
+
 // 注册应用路由
 const setRouter = (app: App) => {
-  // APP根路由
-  const AppRoute: RouteRecordRaw[] = [
-    {
-      path: '/',
-      redirect: '/home', // 默认跳转至首页
-      name: 'App',
-      component: Layout,
-      children: [],
-    },
-  ]
-
-  // 加载外部静态路由(无需鉴权)
-  const StaticRoute: RouteRecordRaw[] = [
-    {
-      path: '/401',
-      name: '401',
-      component: () => import('@/pages/401/index.vue'),
-    },
-    {
-      path: '/404',
-      name: '404',
-      component: () => import('@/pages/404/index.vue'),
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/pages/Login/index.vue'),
-    }
-  ]
-
-  // 内部白名单路由(无需授权)
-  const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes]
-
-  // 初始路由
+  // 全部无需授权路由
   const InitializedRoutes: RouteRecordRaw[] = [...AppRoute, ...StaticRoute]
   InitializedRoutes.forEach((route) => router.addRoute(route))
   WhiteRoute.forEach((route) => router.addRoute('App', route))
@@ -101,7 +104,6 @@ export const addAuthorizedRoute = async () => {
     await Promise.all([initGlobalUserInfo()])
   }
 
-  const AsyncRoute: RouteRecordRaw[] = []
   // 递归校验路由鉴权，过滤无鉴权路由
   const nestedRouteAuth = (routes: RouteRecordRaw[]) =>
     routes.filter((r) => {
@@ -119,7 +121,7 @@ export const addAuthorizedRoute = async () => {
   AuthorizedRoute.forEach((route) => router.addRoute('App', route))
 
   // 注入菜单未读标记
-  injectRouteBadge()
+  // injectRouteBadge()
 }
 
 export default setRouter

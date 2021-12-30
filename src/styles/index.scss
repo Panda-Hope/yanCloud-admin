@@ -84,12 +84,16 @@ $gaps: 1,2,3,4,5;
     flex-wrap: wrap;
   }
 
-  &.alignCenter {
+  &.align-center {
     align-items: center;
   }
 
-  &.spaceBetween {
+  &.space-between {
     justify-content: space-between;
+  }
+
+  &.space-around {
+    justify-content: space-around;
   }
 }
 

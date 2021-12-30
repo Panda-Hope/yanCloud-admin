@@ -6,6 +6,10 @@
         :collapse="isCollapse"
         :collapse-transition="false"
         class="page-menu">
+      <el-menu-item class="flex">
+        <el-avatar :src="PaiMeng"></el-avatar>
+        <span class="ml-15">派蒙</span>
+      </el-menu-item>
       <template v-for="(menu, index) in menus">
         <template v-if="!menu.children">
           <el-menu-item
@@ -87,8 +91,10 @@ import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute, RouteRecordRaw } from 'vue-router'
 import { useStore } from 'vuex'
 
-import './index.scss'
+import PaiMeng from '@/assets/paimeng.jpg'
 import NavBreadCrumb from './breadcrumb.vue'
+import './index.scss'
+
 
 const store = useStore()
 const router = useRouter()
@@ -118,7 +124,5 @@ watch(() => store.getters.refresh, () => {
   if (sidebar) sidebar.value?.$forceUpdate()
 })
 
-const onMenuClick = (path: string) => {
-  router.push(`/${path}`)
-}
+const onMenuClick = (path: string) => router.push(`/${path}`)
 </script>

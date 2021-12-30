@@ -8,7 +8,7 @@
         <el-breadcrumb-item
             v-for="(route, key) in matchedRoutes"
             :to="route.path"
-            :key="key">{{ route.meta && route.meta.title }}</el-breadcrumb-item>
+            :key="key">{{ route?.meta?.title }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="right">
@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import setupState from './setup/menuState' // userInfo ane menu state setup
+import setupState from './setup/menuState'
 import setupNav from './setup/nav'
 import './index.scss'
 
