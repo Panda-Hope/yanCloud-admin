@@ -15,7 +15,9 @@ import {
   injectRouteBadge
 } from '@/global'
 
+// 路由列表
 import HomeRoutes from './home'
+import SkeletonRoutes from './skeleton'
 
 // 导出路由实例
 export const router: Router = createRouter({
@@ -58,7 +60,9 @@ const StaticRoute: RouteRecordRaw[] = [
 const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes]
 
 // 异步动态加载路由
-const AsyncRoute: RouteRecordRaw[] = []
+const AsyncRoute: RouteRecordRaw[] = [
+  ...SkeletonRoutes
+]
 
 // 注册应用路由
 const setRouter = (app: App) => {
