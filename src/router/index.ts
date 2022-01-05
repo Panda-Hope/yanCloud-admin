@@ -18,6 +18,7 @@ import {
 // 路由列表
 import HomeRoutes from './home'
 import SkeletonRoutes from './skeleton'
+import TableRoutes from './table'
 
 // 导出路由实例
 export const router: Router = createRouter({
@@ -61,7 +62,8 @@ const WhiteRoute: RouteRecordRaw[] = [...HomeRoutes]
 
 // 异步动态加载路由
 const AsyncRoute: RouteRecordRaw[] = [
-  ...SkeletonRoutes
+  ...SkeletonRoutes,
+  ...TableRoutes
 ]
 
 // 注册应用路由

@@ -12,6 +12,12 @@ const skeletonRoutes = [
         name: 'skeletonHome',
         meta: { permission: '*', title: '介绍', icon: 'Star' },
         component: () => import('@/pages/Skeleton/index.vue')
+      },
+      {
+        path: 'form',
+        name: 'skeletonForm',
+        meta: { permission: '*', title: '表单', icon: 'Star' },
+        component: () => import('@/pages/Skeleton/form.vue')
       }
     ]
   }
